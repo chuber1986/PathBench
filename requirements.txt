@@ -1,10 +1,11 @@
+python==3.8
 torch
 numpy
 matplotlib
-nptyping
+nptyping==1.4.4
 panda3d
 pandas
-sklearn
+scikit-learn
 torchvision
 memory_profiler
 seaborn
