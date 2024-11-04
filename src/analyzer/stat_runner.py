@@ -307,58 +307,21 @@ class Runner:
         if not mfile.exists():
             with mfile.open("wb") as f:
                 g = map_inst.grid.copy()
-                g[15, 12] = 2
-                g[16, 12] = 2
-                g[31, 12] = 2
-                g[32, 12] = 2
-                g[46, 12] = 2
-                g[47, 12] = 2
-                g[51, 12] = 2
-                g[52, 12] = 2
-                g[16, 25] = 2
-                g[17, 25] = 2
-                g[32, 25] = 2
-                g[33, 25] = 2
-                g[41, 25] = 2
-                g[42, 25] = 2
-                g[47, 25] = 2
-                g[48, 25] = 2
-                g[57, 25] = 2
-                g[58, 25] = 2
-                g[36, 33] = 2
-                g[37, 33] = 2
-                g[31, 41] = 2
-                g[32, 41] = 2
-                g[24, 28] = 2
-                g[24, 29] = 2
-                g[24, 39] = 2
-                g[24, 40] = 2
-                g[24, 54] = 2
-                g[24, 55] = 2
-                g[46, 38] = 2
-                g[46, 39] = 2
-                g[30, 22] = 2
-                g[30, 23] = 2
-                g[40, 22] = 2
-                g[40, 23] = 2
-                g[48, 17] = 2
-                g[48, 18] = 2
-                g[56, 18] = 2
-                g[56, 19] = 2
                 pickle.dump(g, f)
 
-        gX, gY = 7, 14
-        map_inst.grid[gX, gY] = gID
+        gX, gY, gZ = 3, 3, 3
+        map_inst.grid[gX, gY, gZ] = gID
         clears = np.argwhere(map_inst.grid == cID)
 
         idx = np.random.choice(range(len(clears)), size=1)[0]
 
         aX = clears[idx][0]
         aY = clears[idx][1]
-        map_inst.grid[aX, aY] = aID
+        aZ = clears[idx][2]
+        map_inst.grid[aX, aY, aZ] = aID
 
-        map_inst.agent.position = Point(aX, aY)
-        map_inst.goal.position = Point(gX, gY)
+        map_inst.agent.position = Point(aX, aY, aZ)
+        map_inst.goal.position = Point(gX, gY, gZ)
 
         # from pathlib import Path
         # plt.imshow(map_inst.grid)
@@ -833,6 +796,7 @@ class Runner:
                 "Step",
                 "X",
                 "Y",
+                "Z",
             ]
             writer1 = csv.DictWriter(file, fieldnames=fieldnames3)
 
@@ -849,6 +813,7 @@ class Runner:
                 for step, pos in enumerate(run["trace"]):
                     x = pos.position.x
                     y = pos.position.y
+                    z = pos.position.z
 
                     writer1.writerow(
                         {
@@ -857,6 +822,7 @@ class Runner:
                             "Step": step,
                             "X": x,
                             "Y": y,
+                            "Z": z,
                         }
                     )
 
@@ -1162,13 +1128,19 @@ class Runner:
             )
 
             results: List[Dict[str, Any]] = []
-
-            for i in range(nruns):
+            nsucc = 0
+            i = 0
+            while nsucc < nruns:
                 res = self.__run_simulation(
-                    "house_1000/1", algorithm_type, testing_type, algo_params
+                    "house_10_3d/9_3d", algorithm_type, testing_type, algo_params
                 )
                 res["run"] = i
+                i += 1
+
                 results.append(res)  # gets data for the result on map
+
+                if res["goal_found"]:
+                    nsucc += 1
 
             a_star_res, res = self.__report_results(
                 results, a_star_res, algorithm_type, algorithms

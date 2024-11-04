@@ -17,7 +17,7 @@ def main():
 
     c: Configuration = Configuration()
 
-    maps = MapManager.load_all(["House"])
+    maps = MapManager.load_all(["House 3D"])
     maps = list(flatten(maps, depth=1))
     maps = dict(maps)
     c.maps = maps
