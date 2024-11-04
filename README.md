@@ -18,6 +18,13 @@ pip3 install -r requirements.txt
 Optional dependency is `ompl` with installation not covered here, although installation is detected automatically if both `ompl` and its Python bindings are installed.
 There are some extra dependencies needed for testing, and are detailed [here](#testing).
 
+### Usage Dataset generation
+```bash
+python3 src/generate_data.py
+```
+s script runs for a very long time. Potential Field algorithm takes 45min for a single run. Code neets modification to run in paralell.
+
+
 ### Simulator Visualiser Usage
 ```bash
 python3 src/main.py -v
